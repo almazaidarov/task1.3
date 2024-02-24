@@ -1,0 +1,37 @@
+- hosts: all
+  tasks:
+  - name: Disable SELinux
+    selinux:
+      state: disabled
+
+  - name: Install apache    
+    yum:
+      name: httpd
+      state: latest
+
+  - name: Start service httpd, if not started
+    service:
+      name: httpd
+      state: started  
+
+  - name: Enable service httpd, and not touch the state
+    service:
+      name: httpd
+      enabled: yes   
+
+  - name: Download template
+    ansible.builtin.get_url:
+      url: https://www.free-css.com/assets/files/free-css-templates/download/page295/sbs.zip
+      dest: /tmp/sbs.zip
+
+  - name: Unzip template
+    unarchive:
+      src: /tmp/sbs.zip
+      dest: /var/www/html
+      remote_src: yes
+
+  - name: Copy file  
+    copy:
+      src: /var/www/html/sbs-html
+      dest: /var/www/html
+
